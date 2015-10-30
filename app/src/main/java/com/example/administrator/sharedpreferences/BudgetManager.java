@@ -26,23 +26,23 @@ public class BudgetManager extends AppCompatActivity {
         final int balance = sp.getInt("Budget", 0);
         String balanceStr = Integer.toString(balance);
 
-        final int food = sp.getInt("food", 0);
-        String foodstr = Integer.toString(food);
+        final int Food = sp.getInt("food", 0);
+        String foodStr = Integer.toString(Food);
 
-        final int cloth = sp.getInt("cloth", 0);
-        String clothstr = Integer.toString(cloth);
+        final int Cloth = sp.getInt("cloth", 0);
+        String clothStr = Integer.toString(Cloth);
 
-        final int house = sp.getInt("house", 0);
-        String housestr = Integer.toString(house);
+        final int House = sp.getInt("house", 0);
+        String houseStr = Integer.toString(House);
 
-        final int tuition = sp.getInt("tuition", 0);
-        String tuitionstr = Integer.toString(tuition);
+        final int Tuition = sp.getInt("tuition", 0);
+        String tuitionStr = Integer.toString(Tuition);
 
-        final int medical = sp.getInt("medical", 0);
-        String medicalstr = Integer.toString(medical);
+        final int Medical = sp.getInt("medical", 0);
+        String medicalStr = Integer.toString(Medical);
 
-        final int others = sp.getInt("others", 0);
-        String othersstr = Integer.toString(others);
+        final int Others = sp.getInt("others", 0);
+        String othersStr = Integer.toString(Others);
 
 
 
@@ -53,6 +53,7 @@ public class BudgetManager extends AppCompatActivity {
         final TextView tv5=(TextView) findViewById(R.id.tv5);
         final TextView tv6=(TextView) findViewById(R.id.tv6);
         final TextView tv7=(TextView) findViewById(R.id.tv7);
+        final TextView tv8=(TextView) findViewById(R.id.tv8);
 
         final EditText et1=(EditText) findViewById(R.id.et1);
         final EditText et2=(EditText) findViewById(R.id.et2);
@@ -64,111 +65,111 @@ public class BudgetManager extends AppCompatActivity {
         final Button bt1=(Button) findViewById(R.id.bt1);
         final Button bt2=(Button) findViewById(R.id.bt2);
 
-        tv1.setText(balanceStr);
-        tv2.setText(foodstr);
-        tv3.setText(clothstr);
-        tv4.setText(housestr);
-        tv5.setText(medicalstr);
-        tv6.setText(tuitionstr);
-        tv7.setText(othersstr);
+        tv1.setText("Remaining Balance: "+balanceStr);
+        tv2.setText("Food: "+foodStr);
+        tv3.setText("Cloth: "+clothStr);
+        tv4.setText("House Rent: "+houseStr);
+        tv5.setText("Tuition Fees: "+tuitionStr);
+        tv6.setText("Medical Bills: "+medicalStr);
+        tv7.setText("Others: "+othersStr);
 
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                int foodint,clothint,houseint,tuitionint,medicalint,othersint;
+                int foodInt,clothInt,houseInt,tuitionInt,medicalInt,othersInt;
 
-                String foodexp = et1.getText().toString();
+                String foodExp = et1.getText().toString();
                 et1.setText("");
 
-                String clothexp = et2.getText().toString();
+                String clothExp = et2.getText().toString();
                 et2.setText("");
 
-                String houseexp = et3.getText().toString();
+                String houseExp = et3.getText().toString();
                 et3.setText("");
 
-                String tuitionexp = et4.getText().toString();
+                String tuitionExp = et4.getText().toString();
                 et4.setText("");
 
-                String medicalexp = et5.getText().toString();
+                String medicalExp = et5.getText().toString();
                 et5.setText("");
 
-                String othersexp = et6.getText().toString();
+                String othersExp = et6.getText().toString();
                 et6.setText("");
 
                 try {
-                    foodint = Integer.parseInt(foodexp);
-                    clothint = Integer.parseInt(clothexp);
-                    houseint = Integer.parseInt(houseexp);
-                    tuitionint = Integer.parseInt(tuitionexp);
-                    medicalint = Integer.parseInt(medicalexp);
-                    othersint = Integer.parseInt(othersexp);
+                    foodInt = Integer.parseInt(foodExp);
+                    clothInt = Integer.parseInt(clothExp);
+                    houseInt = Integer.parseInt(houseExp);
+                    tuitionInt = Integer.parseInt(tuitionExp);
+                    medicalInt = Integer.parseInt(medicalExp);
+                    othersInt = Integer.parseInt(othersExp);
 
                     int bal = sp.getInt("Budget", 0);
-                    int totalexpense = foodint+clothint+houseint+tuitionint+medicalint+othersint;
+                    int totalExpense = foodInt+clothInt+houseInt+tuitionInt+medicalInt+othersInt;
 
-                    int newbal = bal - totalexpense;
+                    int newBal = bal - totalExpense;
 
-                    editor.putInt("Budget", newbal);
+                    editor.putInt("Budget", newBal);
                     editor.commit();
 
-                    tv1.setText(Integer.toString(newbal));
+                    tv1.setText("Remaining Balance: "+Integer.toString(newBal));
 
 
 
-                    int newfood = sp.getInt("food", 0);
-                    int finalfood = newfood-foodint;
+                    int newFood = sp.getInt("food", 0);
+                    int lastFood = newFood-foodInt;
 
-                    editor.putInt("food", finalfood);
+                    editor.putInt("food", lastFood);
                     editor.commit();
 
-                    tv2.setText(Integer.toString(finalfood));
+                    tv2.setText("Food: "+Integer.toString(lastFood));
 
 
 
-                    int newcloth = sp.getInt("cloth", 0);
-                    int finalcloth = newcloth-clothint;
+                    int newCloth = sp.getInt("cloth", 0);
+                    int lastCloth = newCloth-clothInt;
 
-                    editor.putInt("cloth", finalcloth);
+                    editor.putInt("cloth", lastCloth);
                     editor.commit();
 
-                    tv3.setText(Integer.toString(finalcloth));
+                    tv3.setText("Cloth: "+Integer.toString(lastCloth));
 
 
-                    int newhouse = sp.getInt("house", 0);
-                    int finalhouse = newhouse-houseint;
+                    int newHouse = sp.getInt("house", 0);
+                    int lastHouse = newHouse-houseInt;
 
-                    editor.putInt("house", finalhouse);
+                    editor.putInt("house", lastHouse);
                     editor.commit();
 
-                    tv4.setText(Integer.toString(finalhouse));
+                    tv4.setText("House Rent: "+Integer.toString(lastHouse));
 
 
-                    int newtuition = sp.getInt("tuition", 0);
-                    int finaltuition = newtuition-tuitionint;
+                    int newTuition = sp.getInt("tuition", 0);
+                    int lastTuition = newTuition-tuitionInt;
 
-                    editor.putInt("tuition", finaltuition);
+                    editor.putInt("tuition", lastTuition);
                     editor.commit();
 
-                    tv5.setText(Integer.toString(finaltuition));
+                    tv5.setText("Tuition Fees: "+Integer.toString(lastTuition));
 
 
-                    int newmedical = sp.getInt("medical", 0);
-                    int finalmedical = newmedical-medicalint;
+                    int newMedical = sp.getInt("medical", 0);
+                    int lastMedical = newMedical-medicalInt;
 
-                    editor.putInt("food", finalmedical);
+                    editor.putInt("medical", lastMedical);
                     editor.commit();
 
-                    tv6.setText(Integer.toString(finalmedical));
+                    tv6.setText("Medical Bills: "+Integer.toString(lastMedical));
 
 
-                    int newothers = sp.getInt("others", 0);
-                    int finalothers = newothers-othersint;
+                    int newOthers = sp.getInt("others", 0);
+                    int lastOthers = newOthers-othersInt;
 
-                    editor.putInt("others", finalothers);
+                    editor.putInt("others", lastOthers);
                     editor.commit();
 
-                    tv7.setText(Integer.toString(finalothers));
+                    tv7.setText("Others: "+Integer.toString(lastOthers));
 
 
                 } catch (Exception e) {
