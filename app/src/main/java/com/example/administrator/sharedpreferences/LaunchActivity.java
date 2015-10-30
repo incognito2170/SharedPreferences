@@ -16,16 +16,21 @@ public class LaunchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_launch);
 
         SharedPreferences sp = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-        boolean isSet = sp.getBoolean("budget_isSet", false);
+        boolean foodisSet = sp.getBoolean("food_isSet", false);
+        boolean clothisSet = sp.getBoolean("cloth_isSet", false);
+        boolean houseisSet = sp.getBoolean("house_isSet", false);
+        boolean tuitionisSet = sp.getBoolean("tuition_isSet", false);
+        boolean medicalisSet = sp.getBoolean("medical_isSet", false);
+        boolean othersisSet = sp.getBoolean("others_isSet", false);
         Intent intent;
 
 
-        if(isSet == false){
+        if(foodisSet == false || clothisSet == false || houseisSet == false || tuitionisSet == false || medicalisSet == false || othersisSet == false){
             intent = new Intent(LaunchActivity.this, SetBudget.class);
             startActivity(intent);
             finish();
         }
-        else if(isSet == true){
+        else if(foodisSet == true && clothisSet == true && houseisSet == true && tuitionisSet == true && medicalisSet == true && othersisSet == true){
             intent = new Intent(LaunchActivity.this, BudgetManager.class);
             startActivity(intent);
             finish();

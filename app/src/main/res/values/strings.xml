@@ -3,7 +3,7 @@
     <string name="totalbudget">Enter your budget</string>
     <string name="insertbudget">Enter your budget</string>
     <string name="action_settings">Settings</string>
-    <string name="insertexpense">Enter your expenses, one by one</string>
+    <string name="insertexpense">Enter your expenses, one by one:</string>
     <string name="title_activity_launch">LaunchActivity</string>
 
     <string name="hello_world">Hello world!</string>

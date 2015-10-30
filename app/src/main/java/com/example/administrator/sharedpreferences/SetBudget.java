@@ -67,10 +67,14 @@ public class SetBudget extends AppCompatActivity {
                 editor.commit();
 
 
-                String strBudget6 = edit2.getText().toString();
+                String strBudget6 = edit6.getText().toString();
                 int others = Integer.parseInt(strBudget6);
                 editor.putInt("others", others);
                 editor.putBoolean("others_isSet", true);
+                editor.commit();
+
+                int intBudget = food+cloth+house+tuition+medical+others;
+                editor.putInt("Budget", intBudget);
                 editor.commit();
 
                 Intent intent = new Intent(SetBudget.this, BudgetManager.class);
