@@ -172,6 +172,8 @@ public class BudgetManager extends AppCompatActivity {
                     tv7.setText("Others: "+Integer.toString(lastOthers));
 
 
+
+
                 } catch (Exception e) {
 
                     Toast.makeText(BudgetManager.this, "Please enter integer values only", Toast.LENGTH_LONG).show();
@@ -191,9 +193,10 @@ public class BudgetManager extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
-    @Override
+        @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_budget_manager, menu);
