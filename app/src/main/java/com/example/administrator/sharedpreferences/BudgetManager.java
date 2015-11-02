@@ -1,10 +1,12 @@
 package com.example.administrator.sharedpreferences;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,13 +73,13 @@ public class BudgetManager extends AppCompatActivity {
         tv4.setText("House Rent: "+houseStr);
         tv5.setText("Tuition Fees: "+tuitionStr);
         tv6.setText("Medical Bills: "+medicalStr);
-        tv7.setText("Others: "+othersStr);
+        tv7.setText("Other Purposes: " + othersStr);
 
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                int foodInt,clothInt,houseInt,tuitionInt,medicalInt,othersInt;
+                int foodInt, clothInt, houseInt, tuitionInt, medicalInt, othersInt;
 
                 String foodExp = et1.getText().toString();
                 et1.setText("");
@@ -98,85 +100,309 @@ public class BudgetManager extends AppCompatActivity {
                 et6.setText("");
 
                 try {
-                    foodInt = Integer.parseInt(foodExp);
-                    clothInt = Integer.parseInt(clothExp);
-                    houseInt = Integer.parseInt(houseExp);
-                    tuitionInt = Integer.parseInt(tuitionExp);
-                    medicalInt = Integer.parseInt(medicalExp);
-                    othersInt = Integer.parseInt(othersExp);
 
-                    int bal = sp.getInt("Budget", 0);
-                    int totalExpense = foodInt+clothInt+houseInt+tuitionInt+medicalInt+othersInt;
+                    if (TextUtils.isEmpty(foodExp)) {
+                        foodInt = 0;
+                    } else {
+                        foodInt = Integer.parseInt(foodExp);
+                    }
 
-                    int newBal = bal - totalExpense;
+                    if (TextUtils.isEmpty(clothExp)) {
+                        clothInt = 0;
+                    } else {
+                        clothInt = Integer.parseInt(clothExp);
+                    }
 
-                    editor.putInt("Budget", newBal);
-                    editor.commit();
+                    if (TextUtils.isEmpty(houseExp)) {
+                        houseInt = 0;
+                    } else {
+                        houseInt = Integer.parseInt(houseExp);
+                    }
 
-                    tv1.setText("Remaining Balance: "+Integer.toString(newBal));
+                    if (TextUtils.isEmpty(tuitionExp)) {
+                        tuitionInt = 0;
+                    } else {
+                        tuitionInt = Integer.parseInt(tuitionExp);
+                    }
 
+                    if (TextUtils.isEmpty(medicalExp)) {
+                        medicalInt = 0;
+                    } else {
+                        medicalInt = Integer.parseInt(medicalExp);
+                    }
 
-
-                    int newFood = sp.getInt("food", 0);
-                    int lastFood = newFood-foodInt;
-
-                    editor.putInt("food", lastFood);
-                    editor.commit();
-
-                    tv2.setText("Food: "+Integer.toString(lastFood));
-
-
-
-                    int newCloth = sp.getInt("cloth", 0);
-                    int lastCloth = newCloth-clothInt;
-
-                    editor.putInt("cloth", lastCloth);
-                    editor.commit();
-
-                    tv3.setText("Cloth: "+Integer.toString(lastCloth));
-
-
-                    int newHouse = sp.getInt("house", 0);
-                    int lastHouse = newHouse-houseInt;
-
-                    editor.putInt("house", lastHouse);
-                    editor.commit();
-
-                    tv4.setText("House Rent: "+Integer.toString(lastHouse));
+                    if (TextUtils.isEmpty(othersExp)) {
+                        othersInt = 0;
+                    } else {
+                        othersInt = Integer.parseInt(othersExp);
+                    }
 
 
-                    int newTuition = sp.getInt("tuition", 0);
-                    int lastTuition = newTuition-tuitionInt;
+                    if (foodInt < 0 || clothInt < 0 || houseInt < 0 || tuitionInt < 0 || medicalInt < 0 || othersInt < 0) {
 
-                    editor.putInt("tuition", lastTuition);
-                    editor.commit();
+                        AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                        alertDialog.setTitle("Alert!");
+                        alertDialog.setMessage("Please enter non-negative values.");
 
-                    tv5.setText("Tuition Fees: "+Integer.toString(lastTuition));
+                        alertDialog.show();
+
+                    } else {
+                        int oriBalance = sp.getInt("originalBudget", 0);
+                        int bal = sp.getInt("Budget", 0);
+                        int totalExpense = foodInt + clothInt + houseInt + tuitionInt + medicalInt + othersInt;
+                        int newBal = bal - totalExpense;
+
+                        if (newBal > 0 && newBal < ((oriBalance * 25) / 100)) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!");
+                            alertDialog.setMessage("Your remaining Overall balance is less than 25% of your allocated Overall budget which was " + oriBalance);
+
+                            alertDialog.show();
+
+                        } else if (newBal == 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!");
+                            alertDialog.setMessage("You have used 100% of your allocated Overall budget.");
+
+                            alertDialog.show();
+                        } else if (newBal < 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!!");
+                            alertDialog.setMessage("You are running on negative Overall budget.");
+
+                            alertDialog.show();
 
 
-                    int newMedical = sp.getInt("medical", 0);
-                    int lastMedical = newMedical-medicalInt;
+                        }
 
-                    editor.putInt("medical", lastMedical);
-                    editor.commit();
-
-                    tv6.setText("Medical Bills: "+Integer.toString(lastMedical));
+                        editor.putInt("Budget", newBal);
+                        editor.commit();
+                        tv1.setText("Remaining Balance: " + Integer.toString(newBal));
 
 
-                    int newOthers = sp.getInt("others", 0);
-                    int lastOthers = newOthers-othersInt;
+                        int oriFood = sp.getInt("originalFood", 0);
+                        int newFood = sp.getInt("food", 0);
+                        int lastFood = newFood - foodInt;
 
-                    editor.putInt("others", lastOthers);
-                    editor.commit();
+                        if (lastFood > 0 && lastFood < ((oriFood * 25) / 100)) {
 
-                    tv7.setText("Others: "+Integer.toString(lastOthers));
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!");
+                            alertDialog.setMessage("Your remaining balance for Food is less than 25% of your allocated budget for Food which was " + oriFood);
+
+                            alertDialog.show();
+
+                        } else if (lastFood == 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!");
+                            alertDialog.setMessage("You have used 100% of your allocated budget for Food.");
+
+                            alertDialog.show();
+                        } else if (lastFood < 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!!");
+                            alertDialog.setMessage("You are running on a negative budget for Food.");
+
+                            alertDialog.show();
 
 
+                        }
+
+                        editor.putInt("food", lastFood);
+                        editor.commit();
+                        tv2.setText("Food: " + Integer.toString(lastFood));
+
+
+                        int oriCloth = sp.getInt("originalCloth", 0);
+                        int newCloth = sp.getInt("cloth", 0);
+                        int lastCloth = newCloth - clothInt;
+
+                        if (lastCloth > 0 && lastCloth < ((oriCloth * 25) / 100)) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!");
+                            alertDialog.setMessage("Your remaining balance for Cloth is less than 25% of your allocated budget for Cloth which was " + oriCloth);
+
+                            alertDialog.show();
+
+                        } else if (lastCloth == 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!");
+                            alertDialog.setMessage("You have used 100% of your allocated budget for Cloth.");
+
+                            alertDialog.show();
+                        } else if (lastCloth < 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!!");
+                            alertDialog.setMessage("You are running on a negative budget for Cloth.");
+
+                            alertDialog.show();
+
+
+                        }
+
+                        editor.putInt("cloth", lastCloth);
+                        editor.commit();
+                        tv3.setText("Cloth: " + Integer.toString(lastCloth));
+
+
+                        int oriHouse = sp.getInt("originalHouse", 0);
+                        int newHouse = sp.getInt("house", 0);
+                        int lastHouse = newHouse - houseInt;
+
+                        if (lastHouse > 0 && lastHouse < ((oriHouse * 25) / 100)) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!");
+                            alertDialog.setMessage("Your remaining balance for House Rent is less than 25% of your allocated budget for House Rent which was " + oriHouse);
+
+                            alertDialog.show();
+
+                        } else if (lastHouse == 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!");
+                            alertDialog.setMessage("You have used 100% of your allocated budget for House Rent.");
+
+                            alertDialog.show();
+                        } else if (lastHouse < 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!!");
+                            alertDialog.setMessage("You are running on a negative budget for House Rent.");
+
+                            alertDialog.show();
+
+
+                        }
+
+                        editor.putInt("house", lastHouse);
+                        editor.commit();
+                        tv4.setText("House Rent: " + Integer.toString(lastHouse));
+
+
+                        int oriTuition = sp.getInt("originalTuition", 0);
+                        int newTuition = sp.getInt("tuition", 0);
+                        int lastTuition = newTuition - tuitionInt;
+
+                        if (lastTuition > 0 && lastTuition < ((oriTuition * 25) / 100)) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!");
+                            alertDialog.setMessage("Your remaining balance for Tuition Fees is less than 25% of your allocated budget for Tuition Fees which was " + oriTuition);
+
+                            alertDialog.show();
+
+                        } else if (lastTuition == 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!");
+                            alertDialog.setMessage("You have used 100% of your allocated budget for Tuition Fees.");
+
+                            alertDialog.show();
+                        } else if (lastTuition < 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!!");
+                            alertDialog.setMessage("You are running on a negative budget for Tuition Fees.");
+
+                            alertDialog.show();
+
+
+                        }
+
+                        editor.putInt("tuition", lastTuition);
+                        editor.commit();
+                        tv5.setText("Tuition Fees: " + Integer.toString(lastTuition));
+
+
+                        int oriMedical = sp.getInt("originalMedical", 0);
+                        int newMedical = sp.getInt("medical", 0);
+                        int lastMedical = newMedical - medicalInt;
+
+                        if (lastMedical > 0 && lastMedical < ((oriMedical * 25) / 100)) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!");
+                            alertDialog.setMessage("Your remaining balance for Medical Bills is less than 25% of your allocated budget for Medical Bills which was " + oriMedical);
+
+                            alertDialog.show();
+
+                        } else if (lastMedical == 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!");
+                            alertDialog.setMessage("You have used 100% of your allocated budget for Medical Bills.");
+
+                            alertDialog.show();
+                        } else if (lastMedical < 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!!");
+                            alertDialog.setMessage("You are running on a negative budget for Medical Bills.");
+
+                            alertDialog.show();
+
+
+                        }
+
+                        editor.putInt("medical", lastMedical);
+                        editor.commit();
+                        tv6.setText("Medical Bills: " + Integer.toString(lastMedical));
+
+
+                        int oriOthers = sp.getInt("originalOthers", 0);
+                        int newOthers = sp.getInt("others", 0);
+                        int lastOthers = newOthers - othersInt;
+
+                        if (lastOthers > 0 && lastOthers < ((oriOthers * 25) / 100)) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!");
+                            alertDialog.setMessage("Your remaining balance for Other Purposes is less than 25% of your allocated budget for Other Purposes which was " + oriOthers);
+
+                            alertDialog.show();
+
+                        } else if (lastOthers == 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!");
+                            alertDialog.setMessage("You have used 100% of your allocated budget for Other Purposes.");
+
+                            alertDialog.show();
+                        } else if (lastOthers < 0) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                            alertDialog.setTitle("Alert!!!");
+                            alertDialog.setMessage("You are running on a negative budget for Other Purposes.");
+
+                            alertDialog.show();
+
+
+                        }
+
+                        editor.putInt("others", lastOthers);
+                        editor.commit();
+                        tv7.setText("Other Purposes: " + Integer.toString(lastOthers));
+
+                    }
 
 
                 } catch (Exception e) {
 
-                    Toast.makeText(BudgetManager.this, "Please enter integer values only", Toast.LENGTH_LONG).show();
+
+                    AlertDialog alertDialog = new AlertDialog.Builder(BudgetManager.this).create();
+                    alertDialog.setTitle("Alert!");
+                    alertDialog.setMessage("Please enter integer values only.");
+
+                    alertDialog.show();
 
 
                 }
